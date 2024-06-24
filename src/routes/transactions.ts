@@ -6,6 +6,7 @@ import { z } from 'zod'
 export async function transactionRoutes(app: FastifyInstance) {
   app.get('/', async () => {
     const transactions = await knex('transactions').select('*')
+
     return {
       transactions,
     }
@@ -25,6 +26,16 @@ export async function transactionRoutes(app: FastifyInstance) {
     }
 
     return { status: 'success', transaction }
+  })
+
+  app.get('/summary', async () => {
+    const summary = await knex('transactions')
+      .sum('amount', {
+        as: 'amount',
+      })
+      .first()
+
+    return summary
   })
 
   app.post('/', async (req, res) => {
