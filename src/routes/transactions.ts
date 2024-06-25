@@ -5,14 +5,8 @@ import { z } from 'zod'
 import { checkSessionIdExists } from '../middlewares/check-session-id-exists'
 
 export async function transactionRoutes(app: FastifyInstance) {
-  app.get('/', { preHandler: [checkSessionIdExists] }, async (req, res) => {
+  app.get('/', { preHandler: [checkSessionIdExists] }, async (req) => {
     const { sessionId } = req.cookies
-
-    if (!sessionId) {
-      return res.status(401).send({
-        status: 'unauthorized',
-      })
-    }
 
     const transactions = await knex('transactions')
       .where('session_id', sessionId)
