@@ -40,15 +40,10 @@ export async function transactionRoutes(app: FastifyInstance) {
     return { status: 'success', transaction }
   })
 
-  app.get('/summary', { preHandler: [checkSessionIdExists] }, async (req) => {
-    const { sessionId } = req.cookies
-
+  app.get('/summary', { preHandler: [checkSessionIdExists] }, async () => {
     const summary = await knex('transactions')
       .sum('amount', {
         as: 'amount',
-      })
-      .where({
-        session_id: sessionId,
       })
       .first()
 
